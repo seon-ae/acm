@@ -1,0 +1,88 @@
+// 백준 1062번
+#include <stdio.h>
+#include <string.h>
+#define find_max(a,b) a>b?a:b;
+
+void dfs(int index);
+int countWords(void);
+
+int visited[26];
+char words[50][16];
+int selectedCount = 5; // 선택한 알파벳
+int max;
+int n, k;
+int main(void) {
+	int i,j;
+	int length;
+	int selectCount = 5; // k개가 되면 종료
+	scanf("%d %d", &n, &k);
+	
+	for (i = 0; i < n; i++) {
+		scanf("%s", &words[i]);
+	}
+
+	// k가 5개 미만이라면 읽을 수 있는 단어가 없음
+	if (k < 5) {
+		printf("0");
+		return 0;
+	}
+		visited['a' - 'a'] = 1;
+		visited['n' - 'a'] = 1;
+		visited['t' - 'a'] = 1;
+		visited['i' - 'a'] = 1;
+		visited['c' - 'a'] = 1;
+		length = strlen(words[i]);
+		max = countWords();
+
+		for (int j = 0; j < 26; j++) {
+			if (visited[j] == 0) {
+				dfs(j);
+			}
+		}
+	printf("%d", max);
+	return 0;
+	
+}
+
+void dfs(int index) {
+	// 체크인과 체크아웃은 인덴트가 동일 (같은 레벨에서 이뤄져야함)
+	// 체크인
+	visited[index] = 1;
+	selectedCount++;
+
+	if (selectedCount == k) {
+		// max=최대 단어 개수.
+		max = find_max(countWords(), max);
+	}
+
+	else {
+		for (int i = index+1; i < 26; i++) {
+			if (visited[i] == 0) {
+				dfs(i);
+			}
+		}
+	}
+	// 체크아웃
+	visited[index] = 0;
+	selectedCount--;
+}
+
+// 모든 입력받은 단어 3개에 대해
+// 단어의 캐릭터를 하나하나 보면서 읽을 수 있는지를 체크
+int countWords() {
+	int isPossible = 1;
+	int count = 0; 
+	for (int k = 0; k < n; k++) {
+		isPossible = 1;
+		char* word = words[k];
+		for (int i = 0; i < strlen(word); i++) {
+			if (visited[*(word+i)-'a'] == 0) { // 해당 알파벳을 배운적이 없으면..
+				isPossible = 0; // 무조건 못읽게 됨.
+				break;
+			}
+		}
+		if (isPossible == 1) count++;
+	}
+
+	return count;
+}
