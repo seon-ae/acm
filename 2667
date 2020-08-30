@@ -1,0 +1,74 @@
+#include <stdio.h>
+#define size 26
+
+int vectX[4]={0,0,1,-1};
+int vectY[4]={1,-1,0,0};
+
+int map[size][size];
+int house_count=0;
+int house[size*size]; // 단지내 인구수를 저장할 배열
+int house_size;
+
+void swap(int arr[],int left, int right){
+    int temp=arr[left];
+    arr[left]=arr[right];
+    arr[right]=temp;
+}
+
+void bubble_sort(int arr[]){
+    for (int i=0;i<house_count;i++){
+        for (int j=0;j<house_count-1;j++){
+            if (arr[j]>arr[j+1]){
+                swap(arr,j,j+1);
+            }
+        }
+    }
+}
+
+void dfs(int x, int y, int key){
+    map[x][y]=key; // 1단지, 2단지.. 단지이름으로 바꿔줌
+    int nextX, nextY;
+    for (int i=0;i<4;i++){
+        nextX=x+vectX[i];
+        nextY=y+vectY[i];
+
+        if (nextX>=0&&nextY>=0&&nextX<house_size&&nextY<house_size){
+            if (map[nextX][nextY]==1){
+                dfs(nextX,nextY,key); // 같은 단지 내 호구조사
+            }
+        }
+    }
+}
+
+void solution(void){
+    for (int i=0;i<house_size;i++){
+        for (int j=0;j<house_size;j++){
+            if (map[i][j]==1){
+                house_count++;
+                dfs(i,j,house_count+1);
+            }
+        }
+    }
+    for (int i=0;i<house_size;i++){
+        for (int j=0;j<house_size;j++){
+            if (map[i][j]>1) house[map[i][j]-2]++;
+        }
+    }
+}
+
+int main(void){
+    scanf("%d",&house_size);
+    for (int i=0;i<house_size;i++){
+        for (int j=0;j<house_size;j++){
+            scanf("%1d",&map[i][j]);
+        }
+    }
+    solution();
+    printf("%d\n", house_count);
+
+   bubble_sort(house);
+   for (int i=0;i<house_count;i++){
+       printf("%d\n",house[i]);
+   }
+    return 0;
+}
