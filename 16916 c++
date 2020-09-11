@@ -1,0 +1,51 @@
+#include <algorithm>
+#include <iostream>
+#include <string>
+#include <vector>
+using namespace std;
+
+vector<int> makeTable(string pattern) {
+	int patternSize = pattern.size();
+	vector<int> table(patternSize, 0);
+
+	int j = 0;
+	for (int i = 1; i < patternSize; i++) {
+		while (j > 0 && pattern[i] != pattern[j]) {
+			j = table[j - 1];
+		}
+		if (pattern[i] == pattern[j]) {
+			table[i] = ++j;
+		}
+	}
+	return table;
+}
+
+int kmp(string parent, string pattern) {
+	vector<int> table = makeTable(pattern);
+	int parentSize = parent.size();
+	int patternSize = pattern.size();
+	int j = 0;
+	int flag = 0;
+	for (int i = 0; i < parentSize; i++) {
+		while (j > 0 && parent[i] != pattern[j]) {
+			j = table[j - 1];
+		}
+		if (parent[i] == pattern[j]) {
+			if (j == patternSize - 1) {
+				flag = 1;
+				break;
+			}
+			else j++;
+		}
+	}
+	if (flag) return 1;
+	else return 0;
+}
+int main(void) {
+	string s, p;
+		cin >> s >> p;
+
+		int ans = kmp(s, p);
+		if (ans == 1) printf("%d\n", 1);
+		else printf("%d\n", 0);
+}
