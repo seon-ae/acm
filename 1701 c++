@@ -1,0 +1,46 @@
+#include <algorithm>
+#include <iostream>
+#include <string>
+#include <vector>
+using namespace std;
+
+vector<int> makeTable(string pattern,int start) {
+	int patternSize = pattern.size();
+	vector<int> table(patternSize,0);
+	
+	int j = start;
+	for (int i = start+1; i < patternSize; i++) {
+		while (j > start && pattern[i] != pattern[j]) {
+			j = table[j- 1]+start;
+		}
+		if (pattern[i] == pattern[j]) {
+			table[i] = j-start+1;
+			j++;
+		}
+	}
+	return table;
+}
+int main(void) {
+	ios::sync_with_stdio(false);
+	cin.tie(NULL);
+	string str;
+	int largest;
+	cin >> str;
+	int patternSize = str.size();
+	for (int k = 0; k < patternSize; k++) {
+		vector<int> ans = makeTable(str, k);
+		if (k == 0) largest = ans[0];
+		/*cout << "Start : " << k<<' ';
+		for (int i = 0; i < str.size(); i++) {
+			cout << ans[i] << ' ';
+		}
+		cout << endl << endl;
+		*/
+		for (int i = 0; i < patternSize; i++) {
+			largest = max(largest, ans[i]);
+		}
+
+	}
+	cout <<largest << endl;
+	return 0;
+}
