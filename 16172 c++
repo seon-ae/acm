@@ -1,0 +1,60 @@
+#include <algorithm>
+#include <iostream>
+#include <string>
+#include <vector>
+using namespace std;
+
+vector<int> makeTable(string keyword) {
+	int keywordSize = keyword.size();
+	vector<int> table(keywordSize, 0);
+	int j = 0;
+	for (int i = 1; i < keywordSize; i++) {
+		while (j > 0 && keyword[i] != keyword[j]) {
+			j = table[j - 1];
+		}
+		if (keyword[i] == keyword[j]) {
+			table[i] = ++j;
+		}
+	}
+	return table;
+}
+
+string substring(string text) {
+	string t_text;
+	int textSize = text.size();
+	for (int i = 0; i < textSize; i++) {
+		if (0 <= text[i] - '0' && text[i] - '0' <= 9) continue;
+		else t_text += text[i];
+	}
+	return t_text;
+}
+int kmp(string text, string keyword) {
+	string t_text = substring(text);
+	vector<int> table = makeTable(keyword);
+	int t_textSize = t_text.size();
+	int keywordSize = keyword.size();
+	
+	int j = 0;
+	for (int i = 0; i < t_textSize; i++) {
+		while (j > 0 && t_text[i] != keyword[j]) {
+			j = table[j - 1];
+		}
+		if (t_text[i] == keyword[j]) {
+			if (j == keywordSize - 1) {
+				return 1;
+				break;
+			}
+			else j++;
+		}
+	}
+	return 0;
+}
+
+int main(void) {
+	ios::sync_with_stdio(false);
+	cin.tie(0);
+	string text, keyword;
+	cin >> text >> keyword;
+	int ans=kmp(text, keyword);
+	printf("%d", ans);
+}
