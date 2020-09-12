@@ -1,0 +1,52 @@
+#include <iostream>
+#include <vector>
+#include <algorithm>
+#include <queue>
+#define max_person 32001
+using namespace std;
+
+int inDegree[max_person];
+vector<int> graph[max_person]; // 벡터 '배열' 
+int n, m;
+void bfs();
+
+int main(void) {
+	ios::sync_with_stdio(false);
+	cin.tie(0);
+	
+	cin >> n >> m;
+
+	// 값을 입력받습니다
+	int p1, p2; 
+	for (int i = 0; i < m; i++) {
+		cin >> p1 >> p2;
+		graph[p1].push_back(p2);
+		inDegree[p2]++;
+	}
+	bfs();
+	return 0;
+}
+
+void bfs(void) {
+	queue<int> q;
+	// 위상정렬 알고리즘
+	// 진입차수가 0인 것을 queue에 담아서 
+	// 빼고, 진출하고, 연결된 것 중에 진입차수가 작은 것을 다시 담는 과정 반복 (queue가 비지 않을때까지)
+
+	for (int i = 1; i <= n; i++) {
+		if (!inDegree[i])
+			q.push(i);
+	}
+	while (!q.empty()) {
+		int cur = q.front(); // queue는 선입선출
+		q.pop();
+		cout << cur << " ";
+
+		for (int i = 0; i < graph[cur].size(); i++) {
+			inDegree[graph[cur][i]]--; // 첫번째 노드를 뽑아 출력했으므로, 연결된 노드의 진입차수를 하나씩 줄여줍니다.
+			if (inDegree[graph[cur][i]] == 0) { 
+				q.push(graph[cur][i]);
+			}
+		}
+	}
+}
