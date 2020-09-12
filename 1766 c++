@@ -1,0 +1,41 @@
+#include <iostream>
+#include <algorithm>
+#include <queue>
+#include <vector>
+#define max 32001
+using namespace std;
+
+int n, m;
+vector<int> graph[max]; 
+int inDegree[max];
+void bfs(void);
+
+int main(void) {
+	cin >> n >> m;
+	int n1, n2; // 문제번호 저장
+	for (int i = 0; i < m; i++) {
+		cin >> n1 >> n2;
+		graph[n1].push_back(n2);
+		inDegree[n2]++;
+	}
+	bfs();
+}
+
+void bfs(void) {
+	priority_queue<int,vector<int>,greater<int> > pq;
+	for (int i = 1; i <= n; i++) {
+		if (inDegree[i]== 0) pq.push(i);
+	}
+	while (pq.empty() == 0) {
+		int cur = pq.top(); // 큐 제일 앞에 있는 원소를 반환
+		cout << cur << " ";
+		pq.pop(); // 제거
+
+		for (int i = 0; i < graph[cur].size(); i++) {
+			inDegree[graph[cur][i]]--;
+			if (inDegree[graph[cur][i]] == 0) {
+				pq.push(graph[cur][i]);
+			}
+		}
+	}
+}
