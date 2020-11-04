@@ -1,0 +1,59 @@
+#include <iostream>
+#include <cstring>
+#include <string>
+#include <algorithm>
+using namespace std;
+
+string sum(string, string);
+
+int main(void) {
+	string str1, str2;
+	cin >> str1 >> str2;
+	reverse(str1.begin(), str1.end());
+	reverse(str2.begin(), str2.end());
+	cout<<sum(str1, str2);
+	return 0;
+}
+
+string sum(string str1, string str2) {
+	string result;
+	int carry = 0;
+	int i;
+	int length = str1.size() > str2.size() ? str2.size() : str1.size();
+	for (i = 0; i < length; i++) {
+		int a = str1[i]-48;
+		int b = str2[i]-48;
+		int integer = (a + b+carry) % 10;
+		carry = (a + b + carry) / 10;
+		result += to_string(integer);
+	}
+
+	// str1과 str2의 길이가 같을 때
+	if (str1.size() == str2.size()&&carry) {
+		result += to_string(carry);
+		carry = 0;
+	}
+
+	else if (str2.size() > length) { // str2만 남아있을 때
+		while (i < str2.size()) {
+			int integer = (str2[i]-48 + carry) % 10;
+			carry = (str2[i]-48 + carry) / 10;
+			result += to_string(integer);
+			i++;
+		}
+	}
+
+	else {
+		// str1만 남아있을 때
+		while (i < str1.size()) {
+			int integer = (str1[i]-48 + carry) % 10;
+			carry = (str1[i]-48 + carry) / 10;
+			result += to_string(integer);
+			i++;
+		}
+	}
+	if (carry) result += to_string(carry);
+
+	reverse(result.begin(), result.end());
+	return result;
+}
